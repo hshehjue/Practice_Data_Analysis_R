@@ -1,0 +1,141 @@
+---
+title: "Basic logics for analysis"
+author: "Seungheon Han"
+date: "12/28/2020"
+output: html_document
+---
+
+# Exploring the inbuilt data set
+```{r}
+# (a) Indicate the type of data
+
+print(str(mtcars)) # check the structure of the data set "mtcars" 
+
+# categorical type: cyl, gear, vs, am, carb
+# continuous type: mpg, disp, hp, drat, wt, qsec
+
+
+# (b) Classify the variables into Nominal or Ordinal
+
+# ordinal type: cyl, gear, carb
+# nominal type: vs, am
+
+
+# (c) Create a histogram
+
+par(mfrow = c(3, 3))   # make 3*3 space for six histograms 
+
+# plot histograms via hist()
+hist(mtcars$mpg, main="MPG", xlab="miels per gallon")  
+hist(mtcars$disp, main="DISP", xlab="displacement")
+hist(mtcars$hp, main="HP", xlab="gross horsepower")
+hist(mtcars$drat, main="DRAT", xlab="rear axle ratio")
+hist(mtcars$wt, main="WT", xlab="weight")
+hist(mtcars$qsec, main="QSEC", xlab="1/4 mile time")
+
+
+# (d) Find the max & min mpg
+
+summary(mtcars$mpg)  # call summary() to gain brief statistical measures 
+# min = 10.40
+# max = 33.90
+
+
+# (e) Report the mpg at each of the 25th, 50th, and 75th percentiles
+
+# diverse ways to get 25%, 50%(median), 75% percentiles 
+summary(mtcars$mpg)
+fivenum(mtcars$mpg) 
+quantile(mtcars$mpg, c(0.25, 0.5, 0.75))
+# the first quartile(25%) is 15.43
+# the median(50%) is 19.20
+# the third quartile(75%) is 22.80
+
+
+# (f) Report and interpret the interquartile range for the mpg
+
+# interquartile range: upper quartile - lower quartile 
+quantile(mtcars$mpg, 0.75) - quantile(mtcars$mpg, 0.25) 
+# or using IQR built-in function 
+IQR(mtcars$mpg) 
+
+# interquartile range of mpg variable is 7.375 and it means the spread of middle 50% of mpg data values 
+
+```
+
+# Data exploration
+```{r}
+# (a) Draw a scatter plot with mpg & disp
+
+library(car)  # import the library car to use scatterplot()
+scatterplot(mpg~disp, boxplots=F, regLine=F, smooth=F, pch=19, cex=1.5, data=mtcars)  
+# the negative relationship between the two variables represent that mpg decrease as volume in engine gets bigger. 
+
+
+# (b) Draw two histograms for mpg by am
+
+library(lattice)
+histogram(~mpg | as.factor(am), main="mpg by am", xlab="mpg", data=mtcars) 
+# fuel efficiency of automatic cars are relatively lower than manual cars in the data set 
+```
+
+# Explore the ‘price’ and ‘age’ variables
+```{r}
+# load "usedcarsales.csv" data file as ucs (abbreviation)
+
+ucs <- read.csv("usedcarsales.csv")
+
+# explore the Price variable by using statistical functions
+summary(ucs$Price)
+min(ucs$Price)
+max(ucs$Price)
+mean(ucs$Price)
+median(ucs$Price)
+var(ucs$Price)
+sd(ucs$Price)
+quantile(ucs$Price, c(0.25, 0.5, 0.75))
+
+# histogram for Price with its empirical distribution function 
+hist(ucs$Price, col="grey", border=F, prob=T, main="HISTOGRAM FOR PRICE",
+     xlab="Price")
+lines(density(ucs$Price), col="red", lwd=2)
+
+# plot boxplot for price with lines indicating min, max, and quartiles 
+boxplot(ucs$Price, main="BOXPLOT FOR PRICE", ylab="price")
+abline(h = min(ucs$Price), col="chocolate", lwd=0.5)
+abline(h = max(ucs$Price), col="chocolate", lwd=0.5)
+abline(h = median(ucs$Price), col="red", lwd=0.5)
+abline(h = quantile(ucs$Price, c(0.25, 0.75)), col="blue", lwd=0.5)
+
+# explore the Age variable by using statistical functions
+summary(ucs$Age)
+min(ucs$Age)
+max(ucs$Age)
+mean(ucs$Age)
+median(ucs$Age)
+var(ucs$Age)
+sd(ucs$Age)
+quantile(ucs$Age, c(0.25, 0.5, 0.75))
+
+# histogram for Age with its empirical distribution function 
+hist(ucs$Age, col="grey", border=F, prob=T, main="HISTOGRAM FOR AGE",
+     xlab="Age")
+lines(density(ucs$Age), col="red", lwd=2)
+
+# plot boxplot for Age with lines indicating min, max, and quartiles 
+boxplot(ucs$Age, main="BOXPLOT FOR AGE", ylab="Age")
+abline(h = min(ucs$Age), col="chocolate", lwd=0.5)
+abline(h = max(ucs$Age), col="chocolate", lwd=0.5)
+abline(h = median(ucs$Age), col="red", lwd=0.5)
+abline(h = quantile(ucs$Age, c(0.25, 0.75)), col="blue", lwd=0.5)
+
+# scatter plot between price and age variables
+library(car)
+scatterplot(Price~Age, smooth=F, regLine=F, boxplots=F, 
+            pch=19, cex=1,
+            main="Price vs Age", 
+            xlab="AGE", 
+            ylab="PRICE",
+            data=ucs)
+```
+

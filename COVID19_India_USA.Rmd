@@ -1,0 +1,45 @@
+---
+title: "Visualization_COVID-19_India"
+author: "Seungheon Han"
+date: "12/28/2020"
+output: html_document
+---
+
+# 1) COVID-19 Study: condition in India
+```{r}
+india <- read.csv("india.csv", header = TRUE) # load a data set "india.csv"
+str(india)
+
+library(ggplot2)
+india$ds <- format(as.Date(india$ds, "%d-%m-%y"), "%y-%m-%d") # change the data            format so that the "value" data points lie along the corresponding date
+
+india$ds <- as.Date(india$ds) # transform date data from chr to date
+
+# plot a scatter plot with ds variable as x-axis & value variable as y-axis
+ggplot(india, aes(x = ds, y = value, group = data_type, color = data_type)) +
+                                  # in order to plot the data by data_type, set                                       a group  
+  geom_line(size = 0.3) +   
+  geom_point(size = 1.2) +   # adjust size of the lines and points 
+  labs(title = "India",
+       subtitle = "Condition of new cases of COVID-19 in India",
+       x = "Months(2020)", y = "New Cases/Day") +
+  theme_linedraw()  # change the default theme (grey) to linedraw
+```
+
+# 2) COVID-19 Study: condition in US
+```{r}
+US <- read.csv("US.csv", header = TRUE) # load a data set "US.csv"
+str(US) 
+
+US$ds <- as.Date(US$ds) # transform date data from chr to date
+
+# plot a scatter plot with ds variable as x-axis & value variable as y-axis
+ggplot(US, aes(x = ds, y = value, group = data_type, color = data_type)) +
+                                  # in order to plot the data by data_type, set                                        a group  
+  geom_line(size = 0.3) +
+  geom_point(size = 1.2) +   # adjust size of the lines and points 
+  labs(title = "US",
+       subtitle = "Condition of new cases of COVID-19 in US",
+       x = "Months(2020)", y = "New Cases/Day") 
+```
+
